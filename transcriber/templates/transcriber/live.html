@@ -1,0 +1,26 @@
+{% extends "transcriber/base.html" %}
+{% load static %}
+{% block content %}
+<h1>Speech to Text</h1>
+<p class="subtitle">Speak in Hindi, English or a mix of both. Your words are transcribed in real time and saved to the history when you stop.</p>
+<section class="card recorder" id="recorder" data-worklet-url="{% static 'transcriber/pcm-worklet.js' %}">
+  <div class="recorder-bar">
+    <button class="record-btn" id="record-btn" type="button" aria-label="Start recording"><span></span></button>
+    <div>
+      <div class="status" id="status">Ready</div>
+      <div class="hint" id="hint">Click the button to start recording</div>
+    </div>
+    <label class="language">
+      Language
+      <select id="language">
+        {% for key, label in languages %}<option value="{{ key }}">{{ label }}</option>{% endfor %}
+      </select>
+    </label>
+  </div>
+  <div class="transcript" id="transcript" aria-live="polite" data-placeholder="Your transcription will appear here…"><span id="final-text"></span><span class="interim" id="interim-text"></span></div>
+  <p class="note" id="note" hidden></p>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'transcriber/live.js' %}?v=4" defer></script>
+{% endblock %}

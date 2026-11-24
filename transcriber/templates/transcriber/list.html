@@ -1,0 +1,42 @@
+{% extends "transcriber/base.html" %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Transcription History</h1>
+    <p class="subtitle">All saved transcriptions. Listen to, edit or delete any entry, or add one manually.</p>
+  </div>
+  <a class="btn btn-primary" href="{% url 'transcriber:create' %}">New Transcription</a>
+</div>
+
+{% if transcriptions %}
+<table class="table">
+  <thead>
+    <tr><th>Text</th><th>Created</th><th>Updated</th><th></th></tr>
+  </thead>
+  <tbody>
+  {% for t in transcriptions %}
+    <tr>
+      <td class="text-cell">{{ t.text }}</td>
+      <td class="nowrap">{{ t.created_at|date:"d M Y, H:i" }}</td>
+      <td class="nowrap">{{ t.updated_at|date:"d M Y, H:i" }}</td>
+      <td class="nowrap actions">
+        <button class="btn btn-sm js-speak" type="button" data-text="{{ t.text }}">Listen</button>
+        <a class="btn btn-sm" href="{% url 'transcriber:update' t.pk %}">Edit</a>
+        <a class="btn btn-sm danger" href="{% url 'transcriber:delete' t.pk %}">Delete</a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% if is_paginated %}
+<nav class="pager">
+  {% if page_obj.has_previous %}<a class="btn btn-sm" href="?page={{ page_obj.previous_page_number }}">Previous</a>{% endif %}
+  <span>{{ page_obj.number }} / {{ paginator.num_pages }}</span>
+  {% if page_obj.has_next %}<a class="btn btn-sm" href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+</nav>
+{% endif %}
+{% else %}
+<p class="empty">No transcriptions yet. Go to <a href="{% url 'transcriber:live' %}">Record</a> to create your first one.</p>
+{% endif %}
+{% endblock %}
